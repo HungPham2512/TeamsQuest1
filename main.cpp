@@ -89,7 +89,7 @@ public:
                 danhSachCanBo[i]->hienThi();
                 break;
             }
-            else if(i = soLuongMax - 1){
+            else if(i == soLuongMax - 1){
                 cout << "Sorry he's dead"<< endl;
             }
         }
@@ -103,7 +103,7 @@ public:
 
     void thoatChuongTrinh(){
         cout << "Okay bye" << endl;
-        exit(0);
+        return 0;
     }
 
 
