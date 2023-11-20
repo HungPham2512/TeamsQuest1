@@ -1,130 +1,124 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
-using namespace std;
-
-class CanBo{
-protected:
-    string hoTen;
-    int tuoi;
-    string gioiTinh;
-    string diaChi;
+class CanBo
+{
+private:
+	std::string hoTen;
+	std::string gioiTinh;
+	std::string diaChi;
+	int tuoi;
 
 public:
-    CanBo(string name, int age, string gender, string adress)
-    : hoTen(name), tuoi(age), gioiTinh(gender), diaChi(adress){}
-
-    virtual void hienThi()=0;
-    string timTenCanBo(){
-        return hoTen;
-    }
+	CanBo(std::string hoTen, std::string gioiTinh, std::string diaChi, int tuoi)
+		: hoTen(hoTen), gioiTinh(gioiTinh), diaChi(diaChi), tuoi(tuoi) {}
+	std::string getHoTen() const
+	{
+		return hoTen;
+	}
+	void getThongTin() const
+	{
+		std::cout << hoTen << " " << gioiTinh << " " << diaChi << " " << tuoi << std::endl;
+	}
 };
 
-class CongNhan : public CanBo {
+class CongNhan : public CanBo
+{
+private:
+	int capBac;
 public:
-    int capBac;
-    CongNhan(string name, int age, string gender, string adress, int bac)
-    : CanBo(name, age, gender, adress), capBac(bac){}
-
-    void hienThi() override {
-    cout << "Cong nhan - " << hoTen << ", Tuoi: " << tuoi << ", Gioi tinh: " << gioiTinh << ", Dia chi: " << diaChi << ", Cap bac:" << capBac << endl;
-    }
+	CongNhan(std::string hoTen, std::string gioiTinh, std::string diaChi, int tuoi, int capBac)
+		: CanBo(hoTen, gioiTinh, diaChi, tuoi), capBac(capBac) {}
 };
 
-class KySu : public CanBo {
+class KySu : public CanBo
+{
+private:
+	std::string nganhDaoTao;
 public:
-    string nganhDaoTao;
-    KySu(string name, int age, string gender, string adress, string nganh)
-    : CanBo(name, age, gender, adress), nganhDaoTao(nganh){}
-
-    void hienThi() override {
-    cout << "Ky su - " << hoTen << ", Tuoi: " << tuoi << ", Gioi tinh: " << gioiTinh << ", Dia chi: " << diaChi << ", Nganh dao tao: " << nganhDaoTao << endl;
-    }
+	KySu(std::string hoTen, std::string gioiTinh, std::string diaChi, int tuoi, std::string nganhDaoTao)
+		: CanBo(hoTen, gioiTinh, diaChi, tuoi), nganhDaoTao(nganhDaoTao) {}
 };
 
-class NhanVien : public CanBo {
+class NhanVien : public CanBo
+{
+private:
+	std::string congViec;
 public:
-    string congViec;
-    NhanVien(string name, int age, string gender, string adress, string viec)
-    : CanBo(name, age, gender, adress), congViec(viec){}
-
-    void hienThi() override {
-    cout << "Nhan vien - " << hoTen << ", Tuoi: " << tuoi << ", Gioi tinh: " << gioiTinh << ", Dia chi: " << diaChi << ", Cong viec: " << congViec << endl;
-    }
+	NhanVien(std::string hoTen, std::string gioiTinh, std::string diaChi, int tuoi, std::string congViec)
+		: CanBo(hoTen, gioiTinh, diaChi, tuoi), congViec(congViec) {}
 };
 
-class QLCB{
+
+class QLCB
+{
+private:
+	std::vector<CanBo*> listCanBo;
+	
 public:
-    CanBo** danhSachCanBo;
-    int soLuongMax;
-    int soChi;
-    int timCanBo = 0;
+	bool timKiem=0;
+	void themMoiCanBo(CanBo* canBo)
+	{
+		listCanBo.push_back(canBo);
+	}
 
-    QLCB(int soMax) : soLuongMax(soMax), soChi(0) {
-        danhSachCanBo = new CanBo*[soLuongMax];
-    }
+	void timKiemCanBo(std::string hoTen)
+	{
+		for (CanBo* canBo : listCanBo)
+		{
+			if (canBo->getHoTen() == hoTen)
+			{
+				std::cout << "Tim thay!" << std::endl;
+				canBo->getThongTin();
+				timKiem = 1;
+			}
+		}
 
-    ~QLCB(){
-        for( int i=0; i< soLuongMax; i++){
-            delete danhSachCanBo[i];
-        }
-        delete[] danhSachCanBo;
-    }
+		if (timKiem != 1)
+		{
+			std::cout << "Khong tim thay" << std::endl;
+		}
+	}
 
-    void themCanBo(CanBo* canBoptr){
-        if(soChi < soLuongMax){
-            danhSachCanBo[soChi] = canBoptr;
-            soChi++;
-        }
-        else{
-            cout << "So luong vuot muc" << endl;
-        }
-    }
+	void hienThiThongTin()
+	{
+		for (CanBo* canBo : listCanBo)
+		{
+			canBo->getThongTin();
+		}
+	}
 
-    void timKiem(const string tenCanBo){
-        for( int i = 0; i < soLuongMax; i++){
-            if (tenCanBo.compare(danhSachCanBo[i]->timTenCanBo())==0){
-                timCanBo = 1;
-                cout << "Tim thay can bo "<<  tenCanBo << endl;
-                danhSachCanBo[i]->hienThi();
-                break;
-            }
-            else if(i == soLuongMax - 1){
-                cout << "Sorry he's dead"<< endl;
-            }
-        }
-    }
-
-    void hienThiDanhSach(){
-        for( int i = 0; i < soLuongMax; i++){
-            danhSachCanBo[i]->hienThi();
-        }
-    }
-
-    void thoatChuongTrinh(){
-        cout << "Okay bye" << endl;
-        return 0;
-    }
-
-
+	void thoatChuongTrinh()
+	{
+		for (CanBo* canBo : listCanBo)
+		{
+			delete canBo;
+		}
+	}
 };
 
 int main()
 {
-    CongNhan cn1("Faker", 18, "Pan", "North Korea", 3);
-    cn1.hienThi();
-    KySu ks1("Elon", 40, "Camera", "Alabama", "CEO");
-    ks1.hienThi();
-    NhanVien nv1("Rizzler", 30, "Male", "Germany", "Nazi");
-    nv1.hienThi();
-    QLCB ds1(10);
-    ds1.themCanBo(&cn1);
-    ds1.themCanBo(&ks1);
-    ds1.themCanBo(&nv1);
-    //ds1.timKiem("Faker");
-    ds1.timKiem("Ryu");
-    ds1.hienThiDanhSach();
-    ds1.thoatChuongTrinh();
+	QLCB qlcb;
+	std:: string name;
 
-    return 0;
+	CanBo* canBo1 = new CongNhan("Nguyen Van A", "Nam", "Hanoi", 40, 5);
+	CanBo* canBo2 = new KySu("Nguyen Thi B", "Nu", "Namdinh", 35, "TuDongHoa");
+	CanBo* canBo3 = new NhanVien("Nguyen Van C", "Nam", "Haiphong", 25, "GiaoVien");
+
+	qlcb.themMoiCanBo(canBo1);
+	qlcb.themMoiCanBo(canBo2);
+	qlcb.themMoiCanBo(canBo3);
+
+	qlcb.hienThiThongTin();
+
+	std::cout << "Nhap ten tim kiem" << std::endl;
+	std::getline(std::cin, name);
+
+	qlcb.timKiemCanBo(name);
+
+	qlcb.thoatChuongTrinh();
+	
+	return 0;
 }
