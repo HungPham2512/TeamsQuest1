@@ -63,7 +63,7 @@ public:
 		listCanBo.push_back(canBo);
 	}
 
-	void timKiemCanBo(std::string hoTen)
+	void timKiemCanBo(const std::string& hoTen)
 	{
 		for (CanBo* canBo : listCanBo)
 		{
